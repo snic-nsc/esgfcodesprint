@@ -1,4 +1,7 @@
-scripts/checklist.out
-scripts/checklist.log
-scripts/checklist.aux
-scripts/checklist.pdf
+docsource/checklist.aux
+docsource/checklist.bcf
+docsource/checklist.log
+docsource/checklist.pdf
+docsource/checklist.run.xml
+docsource/checklist.toc
+docsource/checklist.out

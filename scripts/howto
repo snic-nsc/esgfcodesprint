@@ -1,7 +1,5 @@
-#Here is the procedure to install from the devel branch:
+#Here is the procedure to fetch the bootstrap files from the devel branch:
 
-wget -O esg-bootstrap http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/devel/esgf-installer/2.0/esg-bootstrap --no-check-certificate
+wget -O esg-bootstrap http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/devel/esgf-installer/2.1/esg-bootstrap --no-check-certificate
 chmod 555 esg-bootstrap
 ./esg-bootstrap --devel
-#esg-node --install --type data compute idp index
-

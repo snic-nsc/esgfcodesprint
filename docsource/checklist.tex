@@ -1,0 +1,79 @@
+\documentclass[12pt,oneside]{memoir}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=blue}
+\usepackage{ulem}%for the strikethroughs
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{framed}
+\usepackage{soul}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{amsfonts}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\color{green}\ding{51}\color{black}}%
+\newcommand{\xmark}{\color{red}\ding{55}\color{black}}%
+\newcommand{\cm}{\checkmark{ }}
+\usepackage{biblatex}
+\usepackage{lscape}
+\DisemulatePackage{moreverb}
+\usepackage{moreverb}
+%\usepackage[citestyle=alphabetic,bibstyle=authortitle]{biblatex}
+\bibliography{adminbib}
+%\colorlet{shadecolor}{blue!20}
+\definecolor{myfl}{RGB}{204,255,0}
+%\sethlcolor{shadecolor}
+\newcommand{\redline}[1]{{\sethlcolor{red}{\hl{#1}}}}
+\newcommand{\greenline}[1]{{\sethlcolor{green}{\hl{#1}}}}
+\newcommand{\yellowline}[1]{{\sethlcolor{myfl}{\hl{#1}}}}
+\newcommand{\myopt}{\makebox[2mm][l]{- }{-}}
+\newcommand{\mypar}{\par\vspace{2mm}}
+\let\footruleskip\undefined
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\lhead{\textsf{Setting up a virtual testbed for ESGF}}
+\lfoot{\hyperlink{mytocmarker}{Contents}}
+\rhead{\thepage}
+
+% Remember to increment the version number
+\newcommand{\versionnum}{1.02}
+
+\setsecnumdepth{subsubsection}
+\setcounter{tocdepth}{3}
+\parindent=0pt
+\parskip=5pt
+\renewcommand*\thesection{\arabic{section}}
+
+\newcommand*{\titleSI}{\begingroup% Sagas
+\begin{center}
+\textsf{\Huge Setting up a virtual testbed for ESGF \vspace{20pt}\\}
+Author: Prashanth Dwarakanath, NSC, Sweden \vspace{10pt}\\
+Version: \textsc{\versionnum} \\
+\textsc{\today} \\
+\vfill
+%National Supercomputer Centre, Link\"{o}ping, Sweden
+\end{center}
+\par
+\endgroup}
+
+\begin{document}
+
+\thispagestyle{empty}
+\titleSI
+\frontmatter
+\hypertarget{mytocmarker}
+\tableofcontents
+\mainmatter
+\input{doc.tex}
+\backmatter
+%\appendix
+%\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+%\setcounter{secnumdepth}{0}
+%\input{appendix.tex}
+\newgeometry{left=1cm,right=1cm,top=1in,bottom=1in}
+\begin{small}
+\printbibliography[title={References}]
+\end{small}
+\end{document}

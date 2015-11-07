@@ -1,0 +1,137 @@
+%\chapter{Checklist to setup virtual test cluster for ESGF testing}
+\section {About this document}
+This document was created during the ESGF codesprint conducted by NSC/Link\"oping University, with support from IS-ENES2, and has been revised for use during the NEIC/Nordic ESM/ESGF workshop in Oslo. 
+This document and accompanying scripts and sample configuration files etc can be cloned from the following github repo:\\
+\url{https://github.com/snic-nsc/esgfcodesprint2015.git}.
+\par\vspace{2mm}\noindent
+Preinstalled virtual machines are made available for testing use and are provided without any guarantee/warranty or liability whatsoever and are \textbf{NOT} meant to be used for production deployment.  The virtual machines have been setup in a manner that would allow for easy deployment on a laptop/workstation, on a private local network. If the host machine (laptop/workstation) is connected to the internet, these vms would be able to access the internet, but would themselves not be reachable from the internet. This is to allow for testing ESGF deployments, without the need to have the resource on the open internet.
+\section{Prerequisites}
+Instructions provided in this document describe setting up of a virtual testbed, using VirtualBox, on machines running Linux/Mac OS. Deployments on Windows are also possible, but require the use of the commandline utility to interact with VirtualBox, instructions for which are not provided here.
+\begin{enumerate}
+\item You will need a minimum of 10 GiB of free space on your harddisk, in order to be able to initialize one vm and install all of the ESGF roles on it.
+\item You will need 15+ Gib of space in order to be able to setup a standalone virtual ESGF federation.
+\item Ensure you have VirtualBox version 4.3 or higher, installed on your machine. You can check this by executing the command \texttt{vboxmanage -version}.
+\end{enumerate}
+\section{Virtualbox configuration and vm import}
+\begin{enumerate}
+\item Execute the following commands
+\begin{tiny}
+\begin{verbatimtab}[4]
+VBoxManage hostonlyif create
+VBoxManage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0 --dhcp off --enable
+VboxManage natnetwork add --netname natnet1 --network "10.1.1.0/24" --enable
+VBoxManage natnetwork modify --netname natnet1 --dhcp off
+\end{verbatimtab}
+\end{tiny}
+\newpage
+\item Now, when you execute the following commands, the outputs should look like the following:
+\begin{verbatimtab}[4]
+[pchengi@direwolf ~]$ vboxmanage list hostonlyifs
+Name:            vboxnet0
+GUID:            786f6276-656e-4074-8000-0a0027000000
+DHCP:            Disabled
+IPAddress:       192.168.56.1
+NetworkMask:     255.255.255.0
+IPV6Address:     fe80:0000:0000:0000:0800:27ff:fe00:0000
+IPV6NetworkMaskPrefixLength: 64
+HardwareAddress: 0a:00:27:00:00:00
+MediumType:      Ethernet
+Status:          Up
+VBoxNetworkName: HostInterfaceNetworking-vboxnet0
+
+[pchengi@direwolf ~]$ vboxmanage list natnets
+NetworkName:    natnet1
+IP:             10.1.1.1
+Network:        10.1.1.0/24
+IPv6 Enabled:   No
+IPv6 Prefix:    
+DHCP Enabled:   No
+Enabled:        Yes
+loopback mappings (ipv4)
+        127.0.0.1=2
+\end{verbatimtab}
+\item You now need to download the exported vm `ova' files, which can be imported into VirtualBox. If you can deploy only one vm due to harddisk space constraints, it should be `esg-idx.demonet.local.ova' you need. You can download the others if you have adequate disk space. A complete installation of ESGF on a freshly imported vm is approximately 9 GiB in size.
+\item If you are a currently participating in the NEIC/Nordic ESM/ESGF workshop in Oslo, the download url is \url{ftp://192.168.2.1/workshop}. \\ \greenline{If you are viewing this document outside the NEIC workshop, the url is} \\ \url{http://esg-dn2.nsc.liu.se/workshop}
+\newpage
+\item Import the virtual machine(s) in this manner
+\begin{tiny}
+\begin{verbatimtab}[4]
+[pchengi@direwolf workshop]$ vboxmanage import esg-idx.demonet.local.ova
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Interpreting /srv/ftp/workshop/esg-idx.demonet.local.ova...
+OK.
+Disks:
+  vmdisk1 27033026560  -1  http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized  
+  esg-idx.demonet.local-disk1.vmdk  -1  -1
+
+Virtual system 0:
+ 0: Suggested OS type: "Linux_64"
+    (change with "--vsys 0 --ostype <type>"; use "list ostypes" to list all possible values)
+ 1: Suggested VM name "esg-idx.demonet.local"
+    (change with "--vsys 0 --vmname <name>")
+ 2: Number of CPUs: 2
+    (change with "--vsys 0 --cpus <n>")
+ 3: Guest memory: 1024 MB
+    (change with "--vsys 0 --memory <MB>")
+ 4: Sound card (appliance expects "", can change on import)
+    (disable with "--vsys 0 --unit 4 --ignore")
+ 5: USB controller
+    (disable with "--vsys 0 --unit 5 --ignore")
+ 6: Network adapter: orig HostOnly, config 3, extra slot=0;type=HostOnly
+ 7: Network adapter: orig NATNetwork, config 3, extra slot=1;type=NATNetwork
+ 8: CD-ROM
+    (disable with "--vsys 0 --unit 8 --ignore")
+ 9: IDE controller, type PIIX4
+    (disable with "--vsys 0 --unit 9 --ignore")
+10: IDE controller, type PIIX4
+    (disable with "--vsys 0 --unit 10 --ignore")
+11: Hard disk image: source image=esg-idx.demonet.local-disk1.vmdk, 
+target path=/home/pchengi/VirtualBox VMs/esg-idx.demonet.local/esg-idx.demonet.local-disk1.vmdk, 
+controller=9;channel=0
+    (change target path with "--vsys 0 --unit 11 --disk path";
+    disable with "--vsys 0 --unit 11 --ignore")
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Successfully imported the appliance.
+\end{verbatimtab}
+\end{tiny}
+\item You have now (hopefully!) successfully imported the vm(s) which are clean installs of Centos 6 (minimal), with ESGF prerequisite packages preinstalled.
+\item As root, on your laptop/workstation, add the following entries to your \texttt{/etc/hosts} file:
+\begin{verbatimtab}[4]
+192.168.56.52   esg-idx.demonet.local   esg-idx
+192.168.56.53   esg-idx2.demonet.local  esg-idx2
+192.168.56.54   esg-data.demonet.local   esg-data
+\end{verbatimtab}
+\item Update packages on the vms to the latest available versions, by doing the following.
+\begin{enumerate}
+\item Power on the vm. Refer to Section~\ref{powon} for details.
+\item \texttt{ssh -l root <vmname>} (password is 'esgftestvm123')
+\item \greenline{If you are reading this document outside of the NEIC workshop:}\\
+Edit the file \texttt{/etc/resolv.conf} and change the ip address of the 'nameserver' to \texttt{8.8.8.8}; execute \texttt{ nslookup www.google.com} to check if the domain lookups are happening correctly. 
+\item Execute  \texttt{yum update} to install updates, if any are available. 
+\item \texttt{shutdown -h now} //on the vm!
+\end{enumerate}
+\item Obtaining a snapshot of the vm(s) at this point will allow you to return to the clean 'esgf-ready' state, at any later time. This is very useful if you have to/want to redo installations from scratch. Note that snapshots are best taken/restored with the vm in powered-off state. Obtain a snapshot like this:
+\begin{small}
+\begin{verbatimtab}[4]
+[pchengi@direwolf ~]$ VBoxManage snapshot esg-idx2.demonet.local take 'esgf-ready' 
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Snapshot taken. UUID: 22473e9c-dccc-46c5-9c0b-a43fd2e90af6
+\end{verbatimtab}
+\end{small}
+\item Restoring a vm to the state captured by the snapshot is done like this:
+\begin{small}
+\begin{verbatimtab}[4]
+VBoxManage snapshot esg-idx2.demonet.local restore 'esgf-ready'
+Restoring snapshot 22473e9c-dccc-46c5-9c0b-a43fd2e90af6
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+\end{verbatimtab}
+\end{small}
+\item The vm(s) are now ready for use.
+\end{enumerate}
+\section{Powering on the vm(s)}
+\label{powon}
+\begin{enumerate}
+\item Simply execute \texttt{VboxManage startvm -type headless <vm fullname>}. It should start up within a few seconds. 
+\item You can do \texttt{ping <vm fullname>} to confirm startup. 
+\item Now, you should be able to \textbf{ssh} to it with \texttt{ssh -l root <vm fullname>}.
+\end{enumerate}
