@@ -4,12 +4,12 @@ This document was created during the ESGF codesprint conducted by NSC/Link\"opin
 This document and accompanying scripts and sample configuration files etc can be cloned from the following github repo:\\
 \url{https://github.com/snic-nsc/esgfcodesprint2015.git}.
 \par\vspace{2mm}\noindent
-Preinstalled virtual machines are made available for testing use and are provided without any guarantee/warranty or liability whatsoever and are \textbf{NOT} meant to be used for production deployment.  The virtual machines have been setup in a manner that would allow for easy deployment on a laptop/workstation, on a private local network. If the host machine (laptop/workstation) is connected to the internet, these vms would be able to access the internet, but would themselves not be reachable from the internet. This is to allow for testing ESGF deployments, without the need to have the resource on the open internet.
+Preinstalled virtual machines are made available for testing use and are provided without any guarantee/warranty or liability whatsoever and are \textbf{NOT} meant to be used for production deployment.  The virtual machines have been setup in a manner that would allow for easy deployment on a laptop/workstation, on a private local network. If the host machine (laptop/workstation) is connected to the internet, these vms would be able to access the internet, but would themselves not be reachable from the internet. This is to allow for testing ESGF deployments, without the need to have the resource on open internet.
 \section{Prerequisites}
 Instructions provided in this document describe setting up of a virtual testbed, using VirtualBox, on machines running Linux/Mac OS. Deployments on Windows are also possible, but require the use of the commandline utility to interact with VirtualBox, instructions for which are not provided here.
 \begin{enumerate}
 \item You will need a minimum of 10 GiB of free space on your harddisk, in order to be able to initialize one vm and install all of the ESGF roles on it.
-\item You will need 15+ Gib of space in order to be able to setup a standalone virtual ESGF federation.
+\item You will need 15+ GiB of space in order to be able to setup a standalone virtual ESGF federation.
 \item Ensure you have VirtualBox version 4.3 or higher, installed on your machine. You can check this by executing the command \texttt{vboxmanage -version}.
 \end{enumerate}
 \section{Virtualbox configuration and vm import}
@@ -51,7 +51,7 @@ loopback mappings (ipv4)
         127.0.0.1=2
 \end{verbatimtab}
 \item You now need to download the exported vm `ova' files, which can be imported into VirtualBox. If you can deploy only one vm due to harddisk space constraints, it should be `esg-idx.demonet.local.ova' you need. You can download the others if you have adequate disk space. A complete installation of ESGF on a freshly imported vm is approximately 9 GiB in size.
-\item If you are a currently participating in the NEIC/Nordic ESM/ESGF workshop in Oslo, the download url is \url{ftp://192.168.2.1/workshop}. \\ \greenline{If you are viewing this document outside the NEIC workshop, the url is} \\ \url{http://esg-dn2.nsc.liu.se/workshop}
+\item If you are a currently participating in the NEIC/Nordic ESM/ESGF workshop in Oslo, the download url is \url{ftp://192.168.2.1/virtualtestbed}. \\ \greenline{If you are viewing this document outside the NEIC workshop, the url is} \\ \url{http://esg-dn2.nsc.liu.se/virtualtestbed}
 \newpage
 \item Import the virtual machine(s) in this manner
 \begin{tiny}
