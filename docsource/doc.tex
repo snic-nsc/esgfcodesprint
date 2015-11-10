@@ -18,7 +18,7 @@ Instructions provided in this document describe setting up of a virtual testbed,
 \begin{tiny}
 \begin{verbatimtab}[4]
 VBoxManage hostonlyif create
-VBoxManage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0 --dhcp off --enable
+VBoxManage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 --netmask 255.255.255.0
 VboxManage natnetwork add --netname natnet1 --network "10.1.1.0/24" --enable
 VBoxManage natnetwork modify --netname natnet1 --dhcp off
 \end{verbatimtab}
@@ -135,3 +135,5 @@ Restoring snapshot 22473e9c-dccc-46c5-9c0b-a43fd2e90af6
 \item You can do \texttt{ping <vm fullname>} to confirm startup. 
 \item Now, you should be able to \textbf{ssh} to it with \texttt{ssh -l root <vm fullname>}.
 \end{enumerate}
+\section{Instructions for setting up ESGF}
+Now that your vm(s) are ready, you can refer to \url{https://github.com/ESGF/esgf-installer/wiki/ESGF-Installation-Using-Autoinstaller} for instructions on setting up a new ESGF installation.
