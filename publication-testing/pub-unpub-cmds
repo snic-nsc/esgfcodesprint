@@ -1,0 +1,7 @@
+mkdir -p /root/.globus
+myproxy-logon -s esg-idx.demonet.local -l rootAdmin -o /root/.globus/certificate-file
+esgscan_directory -project cordex -o test.map /esg/data/datapool1
+esgpublish --map ./test.map --project cordex --new-version `date +v%Y%m%d` --service fileservice
+
+esgpublish --map ./test.map --project cordex --new-version `date +v%Y%m%d` --noscan --thredds --publish --service fileservice
+
