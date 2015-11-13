@@ -1,0 +1,7 @@
+## These files are required for CoG configuration exercise
+
+cp *.png /usr/local/cog/cog_config/site_media
+
+mkdir -p /usr/local/cog/cog_config/mytemplates/cog/common 
+
+cp *.html /usr/local/cog/cog_config/mytemplates/cog/common
