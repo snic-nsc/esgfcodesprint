@@ -1,5 +1,17 @@
-#Here is the procedure to fetch the bootstrap files from the devel branch:
+#Execute without any arguments to fetch the bootstrap files from the master branch; presence of any arguments pulls down from the devel branch
+devel=0
+release_maj_version=2.2
+if [ $# -ne 0 ]; then
+	devel=1;
+	echo "Will pull down from devel branch";
+fi
+if [ $devel -eq 1 ]; then
+	wget -O esg-bootstrap http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/devel/esgf-installer/$release_maj_version/esg-bootstrap --no-check-certificate
+	chmod 555 esg-bootstrap
+	./esg-bootstrap --devel
+else
+	wget -O esg-bootstrap http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/esgf-installer/$release_maj_version/esg-bootstrap --no-check-certificate
+	chmod 555 esg-bootstrap
+	./esg-bootstrap
 
-wget -O esg-bootstrap http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/devel/esgf-installer/2.1/esg-bootstrap --no-check-certificate
-chmod 555 esg-bootstrap
-./esg-bootstrap --devel
+fi

@@ -1,6 +1,6 @@
 #!/bin/sh
-INTIF="enp0s20u2"
-EXTIF="eno1"
+EXTIF="enp0s20u1"
+INTIF="eno1"
 /sbin/depmod -a
 /sbin/modprobe ip_tables
 /sbin/modprobe ip_conntrack
