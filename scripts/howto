@@ -1,6 +1,6 @@
 #Execute without any arguments to fetch the bootstrap files from the master branch; presence of any arguments pulls down from the devel branch
 devel=0
-release_maj_version=2.2
+release_maj_version=2.4
 if [ $# -ne 0 ]; then
 	devel=1;
 	echo "Will pull down from devel branch";
