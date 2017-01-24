@@ -19,10 +19,10 @@
 	cat modeladds >> /esg/config/esgcet/esgcet_models_table.txt
 
 #Add CORDEX to list of projects in ESGINI
-	matchtext='test | Test Project | 3'
-	quotedmatchtext=`echo $matchtext|sed 's/[./*?#\t]/\\\\&/g'`
-	quotedadd=`echo "cordex | CORDEX | 4"|sed 's/[./*?#\t]/\\\\&/g'`
-	sed -i "s/$quotedmatchtext/$quotedmatchtext\\n\\t$quotedadd/" $ESGINI
+	#matchtext='test | Test Project | 3'
+	#quotedmatchtext=`echo $matchtext|sed 's/[./*?#\t]/\\\\&/g'`
+	#quotedadd=`echo "cordex | CORDEX | 4"|sed 's/[./*?#\t]/\\\\&/g'`
+	#sed -i "s/$quotedmatchtext/$quotedmatchtext\\n\\t$quotedadd/" $ESGINI
 
 #Copy modified policies and ats (attribute service) files /esg/config
 	cp *.xml /esg/config/
