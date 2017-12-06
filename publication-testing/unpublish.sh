@@ -1,1 +1,3 @@
-/usr/local/uvcdat/2.2.0/bin/esgunpublish --map ./test.map --database-delete
+#!/bin/bash
+source /etc/esg.env
+esgunpublish --map ./test.map --database-delete
