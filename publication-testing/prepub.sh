@@ -12,20 +12,18 @@
 	pushd /esg/data && tar -xzf testdatafile.tgz && rm -f testdatafile.tgz
 	popd
 
-#Copy additional CORDEX specific configuration entries to ESGINI
-	cat handout.ini >>$ESGINI
-
 #Add CORDEX and other model table entries to esgcet_models_table 
 	cat modeladds >> /esg/config/esgcet/esgcet_models_table.txt
 
 #Add CORDEX to list of projects in ESGINI
-	#matchtext='test | Test Project | 3'
-	#quotedmatchtext=`echo $matchtext|sed 's/[./*?#\t]/\\\\&/g'`
-	#quotedadd=`echo "cordex | CORDEX | 4"|sed 's/[./*?#\t]/\\\\&/g'`
-	#sed -i "s/$quotedmatchtext/$quotedmatchtext\\n\\t$quotedadd/" $ESGINI
+	matchtext='test | Test Project | 3'
+	quotedmatchtext=`echo $matchtext|sed 's/[./*?#\t]/\\\\&/g'`
+	quotedadd=`echo "cordex | CORDEX | 4"|sed 's/[./*?#\t]/\\\\&/g'`
+	sed -i "s/$quotedmatchtext/$quotedmatchtext\\n\\t$quotedadd/" $ESGINI
 
 #Copy modified policies and ats (attribute service) files /esg/config
 	cp *.xml /esg/config/
 
 #Update publisher database with new entries
-	/usr/local/uvcdat/2.2.0/bin/esginitialize -c 2>&1|tee esginit.out
+source /usr/local/conda/bin/activate esgf-pub
+esginitialize -c 2>&1|tee esginit.out
