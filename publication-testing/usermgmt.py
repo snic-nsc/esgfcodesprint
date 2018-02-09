@@ -4,12 +4,13 @@ import argparse,socket
 import psycopg2
 import sys
 import readline
+from collections import OrderedDict
 
 
 aparser=argparse.ArgumentParser()
 aparser.add_argument('--enable-extpub', type=str, default=None, help='requires the hostname of the idp')
 aparser.add_argument('--disable-extpub', type=str, default=None, help='requires the hostname of the idp')
-aparser.add_argument('--enable-localgroups', type=str, default=None, nargs='?', help='enables local publication groups')
+aparser.add_argument('--enable-localgroups', type=str, default='none', nargs='?', help='enables local publication groups')
 args=aparser.parse_args()
 enablepub=args.enable_extpub
 disablepub=args.disable_extpub
@@ -59,8 +60,13 @@ if enablepub != None:
         sys.exit(0)
     sys.exit(0)
 
-if enablelocalpub != None:
-    creategroups={'CORDEX_Research':'local CORDEX Research Group','CORDEX_Commercial':'local CORDEX Commercial group','CMIP5 Research':'local CMIP5 Research group','CMIP5 Commercial':'local CMIP5 Commercial group'}
+if enablelocalpub != 'none':
+    creategroups=OrderedDict()
+    creategroup['CORDEX_Research']='local CORDEX Research Group'
+    creategroup['CORDEX_Commercial']='local CORDEX Commercial'
+    creategroup['CMIP5 Research']='local CMIP5 Research Group'
+    creategroup['CMIP5 Commercial']='local CMIP5 Commercial Group'
+    
     for key,val in creategroups.iteritems():
         opstr="insert into esgf_security.group(name,description,visible,automatic_approval) values ('%s','%s', True, True)"%(key,val)
         try:
@@ -70,7 +76,7 @@ if enablelocalpub != None:
         except:
             print 'Local group for %s data publication already present'%(key)
             conn.rollback()
-    print 'Successfully created all local publication groups'
+    print 'All local groups now present'
     sys.exit(0)
 
 if disablepub != None:
