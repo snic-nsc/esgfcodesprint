@@ -62,10 +62,10 @@ if enablepub != None:
 
 if enablelocalpub != 'none':
     creategroups=OrderedDict()
-    creategroup['CORDEX_Research']='local CORDEX Research Group'
-    creategroup['CORDEX_Commercial']='local CORDEX Commercial'
-    creategroup['CMIP5 Research']='local CMIP5 Research Group'
-    creategroup['CMIP5 Commercial']='local CMIP5 Commercial Group'
+    creategroups['CORDEX_Research']='local CORDEX Research Group'
+    creategroups['CORDEX_Commercial']='local CORDEX Commercial'
+    creategroups['CMIP5 Research']='local CMIP5 Research Group'
+    creategroups['CMIP5 Commercial']='local CMIP5 Commercial Group'
     
     for key,val in creategroups.iteritems():
         opstr="insert into esgf_security.group(name,description,visible,automatic_approval) values ('%s','%s', True, True)"%(key,val)
