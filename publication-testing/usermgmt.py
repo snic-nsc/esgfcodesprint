@@ -50,6 +50,9 @@ if enablepub != None:
     except:
         print 'No changes needed'
         sys.exit(0)
+if len(sys.argv) == 1:
+    aparser.print_help()
+    sys.exit(0)
 
 if disablepub != None:
     while True:
