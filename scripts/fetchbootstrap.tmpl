@@ -1,0 +1,16 @@
+#!/bin/bash
+
+devel=develval
+release_maj_version=rmversion
+release_sub_version=rsversion
+
+if [ $devel -eq 1 ]; then
+	wget -O esg-bootstrap.liu http://esg-dn2.nsc.liu.se/esgf/dist/devel/$release_maj_version/$release_sub_version/esgf-installer/esg-bootstrap.liu --no-check-certificate
+	chmod 555 esg-bootstrap.liu
+	./esg-bootstrap.liu --devel
+else
+	wget -O esg-bootstrap.liu http://esg-dn2.nsc.liu.se/esgf/dist/$release_maj_version/$release_sub_version/esgf-installer/esg-bootstrap.liu --no-check-certificate
+	chmod 555 esg-bootstrap.liu
+	./esg-bootstrap.liu
+
+fi

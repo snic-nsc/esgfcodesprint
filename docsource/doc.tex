@@ -1,6 +1,6 @@
 %\chapter{Checklist to setup virtual test cluster for ESGF testing}
 \section {About this document}
-This document was created during the ESGF codesprint conducted by NSC/Link\"oping University, with support from IS-ENES2, and has been revised for use during the NEIC/Nordic ESM/ESGF workshop in Oslo. 
+This document was created during the ESGF codesprint conducted by NSC/Link\"oping University, with support from IS-ENES2, and has been revised for use during subsequent workshops. 
 This document and accompanying scripts and sample configuration files etc can be cloned from the following github repo:\\
 \url{https://github.com/snic-nsc/esgfcodesprint2015.git}.
 \par\vspace{2mm}\noindent
@@ -52,7 +52,7 @@ loopback mappings (ipv4)
         127.0.0.1=2
 \end{verbatimtab}
 \item You now need to download the exported vm `ova' files, which can be imported into VirtualBox. If you can deploy only one vm due to harddisk space constraints, it should be `esg-idx.demonet.local.ova' you need. You can download the others if you have adequate disk space. A complete installation of ESGF on a freshly imported vm is approximately 9 GiB in size.
-\item If you are a currently participating in the NEIC/Nordic ESM/ESGF workshop in Oslo, the download url is \url{ftp://192.168.2.1/virtualtestbed}. \\ \greenline{If you are viewing this document outside the NEIC workshop, the url is} \\ \url{http://esg-dn2.nsc.liu.se/virtualtestbed}
+\item If you are a currently participating in the NICEST ESGF workshop in NSC, Sweden, the download url is \url{ftp://192.168.2.1/virtualtestbed}. \\ \greenline{If you are viewing this document outside the workshop, the url is} \\ \url{http://esg-dn2.nsc.liu.se/virtualtestbed}
 \newpage
 \item Import the virtual machine(s) in this manner
 \begin{tiny}
@@ -106,9 +106,9 @@ Successfully imported the appliance.
 \begin{enumerate}
 \item Power on the vm. Refer to Section~\ref{powon} for details.
 \item \texttt{ssh -l root <vmname>} (password is 'esgftestvm123')
-\item \greenline{If you are reading this document outside of the NEIC workshop:}\\
-Edit the file \texttt{/etc/resolv.conf} and change the ip address of the 'nameserver' to \texttt{8.8.8.8}; execute \texttt{ nslookup www.google.com} to check if the domain lookups are happening correctly. 
-\item Execute  \texttt{yum update} to install updates, if any are available. 
+\item Execute  \texttt{yum update} to install updates, if any are available.
+\item Update the esgfcodesprint2015 repo:\\
+\texttt{cd /root/esgfcodesprint2015 \&\& git pull}
 \item \texttt{shutdown -h now} //on the vm!
 \end{enumerate}
 \item Obtaining a snapshot of the vm(s) at this point will allow you to return to the clean 'esgf-ready' state, at any later time. This is very useful if you have to/want to redo installations from scratch. Note that snapshots are best taken/restored with the vm in powered-off state. Obtain a snapshot like this:
@@ -136,5 +136,284 @@ Restoring snapshot 22473e9c-dccc-46c5-9c0b-a43fd2e90af6
 \item You can do \texttt{ping <vm fullname>} to confirm startup. 
 \item Now, you should be able to \textbf{ssh} to it with \texttt{ssh -l root <vm fullname>}.
 \end{enumerate}
-\section{Instructions for setting up ESGF}
-Now that your vm(s) are ready, you can refer to \url{https://github.com/ESGF/esgf-installer/wiki/ESGF-Installation-Using-Autoinstaller} for instructions on setting up a new ESGF installation.
+\section{Prior to setting up ESGF}
+\begin{enumerate}
+\item
+  Create a globus-online account. You should sign-up here:
+  \url{https://www.globusid.org/create}
+\item
+  Before proceeding further, here's a checklist to check your system
+  environment for basic compliance. \greenline{This is particularly useful to follow, prior to setting up a production server with ESGF.}
+\end{enumerate}
+
+\subsection{Presetup checklist}\label{checklist}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Node installed with Centos 6 final release, with minimal packages, and
+  all updates installed. nmap should be installed
+\item
+  \texttt{hostname --fqdn} should be identical to the name that would be visible
+  on the internet, and proper forward and reverse name resolution,
+  i.e. \texttt{nslookup} should produce the same value of \texttt{hostname --fqdn} and
+  \texttt{nslookup} should produce their ip address. \textbf{This is key to a clean
+  setup in the real-world, and may be ignored during this workshop.}
+\item
+  Clean http/https egress without proxies requiring authentication etc.
+  Failure to achieve this will result in broken installations and wasted
+  time. Simple test: \\
+\texttt{curl https://esg-dn1.nsc.liu.se} should not produce
+  any output. If there is some output indicating requirement for
+  authentication/login etc, the egress is NOT clean, and the situation
+  would need to be resolved with your network admins.
+\item
+  nmap should show the following result
+
+\begin{verbatim}
+nmap -p T:80,443,2811,7512 esg-dn1.nsc.liu.se
+
+Nmap scan report for esg-dn1.nsc.liu.se (130.236.100.123)
+Host is up (0.00045s latency).
+PORT     STATE SERVICE
+80/tcp   open  http
+443/tcp  open  https
+2811/tcp open  gsiftp
+7512/tcp open  unknown
+\end{verbatim}
+
+\item If any port is not open (and \texttt{esg-dn1.nsc.liu.se} is up!), there's
+probably a firewall of some kind, interfering with the network egress,
+and you need to have it fixed.
+
+\tightlist
+\item
+  Ensure that ports 80, 443, and 2811 from their node, should not be
+  firewalled, i.e.~should be accessible to the world. An easy way to
+  check this, even before setting up any services is to do the following, to start a listening service on port 443 on the machine, on all network interfaces:
+\begin{verbatim}
+ncat -l -p 443
+\end{verbatim}
+Now, on a different machine, preferably one outside your organization do this:
+\begin{verbatim}
+ncat <FQDN of your machine> 443
+\end{verbatim}
+It should connect without any error messages, and wait. Typing something into the prompt should
+  result in the same text being displayed on the listening service
+  terminal on the server. Passing a ctrl-c from the client stops the
+  listening server. 
+\item If you are using the virtual machines, you can run ncat on your vm and test connecting to it from your laptop.
+\item Repeat for \textbf{80} and \textbf{2811} ports. If in the real-world, you are unable to access these ports from outside your organizational firewall, those ports are probably being filtered by the firewall, and you may need to contact your network administrator, to get them opened up. 
+\end{enumerate}
+
+\section{Setting up ESGF}
+
+Prior to setting up ESGF, you need to know the version of ESGF you should install. This information is available on the following pages:\\
+\url{https://github.com/ESGF/esgf-installer/wiki/ESGF-Installation-From-scratch}\\
+\url{https://github.com/ESGF/esgf-installer/wiki/ESGF-Installation-Using-Autoinstaller}\\
+
+Use the appropriate links from the links mentioned above, and fetch the bootstrap files for the installation.\\
+\texttt{wget -O esg-bootstrap --no-check-certificate} \url{http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/devel/2.6.4/esgf-installer/esg-bootstrap}\\
+\texttt{chmod 555 esg-bootstrap}\\
+\texttt{./esg-bootstrap}
+
+The execution of the boostrap script sets up key scripts that are
+  required as prerequisites to perform an installation. It writes a file
+  called \texttt{/usr/local/etc/esg-autoinstall.conf} which is an expect
+  script. You must edit and populate with valid entries, before
+  executing it. Below are the complete list of options and suggestions
+  on how to fill it, to install the latest stable software, but without
+  federating it with the ESGF federation. \textbf{It is very important
+  to not federate a node unless it is a production deployment}. All
+  testing should be done when the software has been configured as a
+  standalone test installation. Only questions with options that need to
+  be changed are mentioned below.
+
+\section{Answers for esg-autoinstall}
+\subsection{esg-autoinstall answers for [data index idp compute] installation}
+
+These are the answers you'd need in your esg-autoinstall.conf file, for an all-role installation (the type you perform on the vm \textbf{esg-idx.demonet.local} while testing.
+Change the answers as appropriate.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  FQDN: ``esg-idx.demonet.local''
+\item
+  SHORTNAME ``short'' \# you could use any other value you please.
+\item
+  LONGNAME ``long'' \# you could use any other value you please.
+\item
+  ADMINPASS `testpass1234' \# please use something else!
+\item
+  ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
+\item
+  DBLOWPASS `pubtest1234' \# passwd for publisher database account
+  (alphanumeric only)
+\item
+  GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
+  beginning of this document.
+\item
+  GLOBUSPASS `your globus passwd'
+\item
+  ORGNAME `orgname' \# for your production node, you can use a more
+  meaninful value.
+\item
+  NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
+\item
+  DEFAULTPEER `esg-idx.demonet.local'
+\item
+  PUBLISHNODE `esg-idx.demonet.local'
+\item
+  EXTERNALIDP `n'
+\item
+  IDPPEER `esg-idx.demonet.local'
+\item
+  ADMINEMAIL ``your email address''
+\item
+  GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
+\item
+  THREDDS ``Y''
+\end{enumerate}
+
+\subsection{esg-autoinstall answers for [data] installation}
+
+These are the answers you'd need in your esg-autoinstall.conf file, for a data-only installation (the type you perform on the vm \textbf{esg-data.demonet.local} while testing.
+Change the answers as appropriate.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  FQDN: ``esg-data.demonet.local''
+\item
+  SHORTNAME ``short'' \# you could use any other value you please.
+\item
+  LONGNAME ``long'' \# you could use any other value you please.
+\item
+  ADMINPASS `testpass1234' \# please use something else!
+\item
+  ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
+\item
+  DBLOWPASS `pubtest1234' \# passwd for publisher database account
+  (alphanumeric only)
+\item
+  GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
+  beginning of this document.
+\item
+  GLOBUSPASS `your globus passwd'
+\item
+  ORGNAME `orgname' \# for your production node, you can use a more
+  meaninful value.
+\item
+  NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
+\item
+  DEFAULTPEER `esg-idx.demonet.local'
+\item
+  PUBLISHNODE `esg-idx.demonet.local'
+\item
+  EXTERNALIDP `y'
+\item
+  IDPPEER `esg-idx.demonet.local'
+\item
+  ADMINEMAIL ``your email address''
+\item
+  GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
+\item
+  THREDDS ``Y''
+\end{enumerate}
+
+\subsection{esg-autoinstall answers for [data index compute] installation}
+
+These are the answers you'd need in your esg-autoinstall.conf file, for an an index node with external-idp (the type you perform on the vm \textbf{esg-idx2.demonet.local} while testing.
+Change the answers as appropriate.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  FQDN: ``esg-idx2.demonet.local''
+\item
+  SHORTNAME ``short'' \# you could use any other value you please.
+\item
+  LONGNAME ``long'' \# you could use any other value you please.
+\item
+  ADMINPASS `testpass1234' \# please use something else!
+\item
+  ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
+\item
+  DBLOWPASS `pubtest1234' \# passwd for publisher database account
+  (alphanumeric only)
+\item
+  GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
+  beginning of this document.
+\item
+  GLOBUSPASS `your globus passwd'
+\item
+  ORGNAME `orgname' \# for your production node, you can use a more
+  meaninful value.
+\item
+  NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
+\item
+  DEFAULTPEER `esg-idx2.demonet.local'
+\item
+  PUBLISHNODE `esg-idx2.demonet.local'
+\item
+  EXTERNALIDP `y'
+\item
+  IDPPEER `esg-idx.demonet.local'
+\item
+  ADMINEMAIL ``your email address''
+\item
+  GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
+\item
+  THREDDS ``Y''
+\end{enumerate}
+
+\section{Script for easy wiping/reinstalling installations during testing}
+In the \texttt{esgfcodesprint2015} repo, under the \texttt{directory}, there's a script called \texttt{rinseandrepeat.sh}, which blows away all ESGF files and refetches the bootstrap files, to make it easy to quickly obtain a clean system, ready for performing an ESGF installation.  
+\section{Start the installation
+process}\label{start-the-installation-process}
+
+\begin{verbatim}
+script -c '/usr/local/bin/esg-autoinstall' installation.log
+\end{verbatim}
+
+After this, you'll not be prompted to do anything else, and if there
+haven't been any transient network issues or other gremlins, your
+installation should have completed. The installation screen would look
+like this
+
+\begin{verbatim}
+Finished!...
+In order to see if this node has been installed properly you may direct your browser to:
+http://esg-idx.demonet.local/thredds
+http://esg-idx.demonet.local/esg-orp
+http://esg-idx.demonet.local/
+http://esg-idx.demonet.local/las
+
+Your peer group membership -- : [esgf-test]
+Your specified "default" peer : [esg-idx.demonet.local]
+Your specified "index" peer - : [esg-idx.demonet.local] (url = http://esg-idx.demonet.local/)
+Your specified "idp" peer --- : [esg-idx.demonet.local] (name = ESG-IDX.DEMONET.LOCAL)
+Your temporary certificates have been placed in /etc/tempcerts
+You can install them by executing this : esg-node --install-keypair /etc/tempcerts/hostcert.pem /etc/tempcerts/hostkey.pem
+When promped for the chainfile, specify: /etc/tempcerts/cacert.pem
+
+[Note: Use UNIX group permissions on /esg/content/thredds/esgcet to enable users to be able to publish thredds catalogs from data therein]
+ %> chgrp -R <appropriate unix group for publishing users> /esg/content/thredds
+
+        -------------------------------------------------------
+        Administrators of this node should subscribe to the
+        esgf-node-admins@lists.llnl.gov by sending email to: majordomo@lists.llnl.gov
+        with the body: subscribe esgf-node-admins
+        -------------------------------------------------------
+
+v2.5.17-master-release
+
+Writing additional settings to db. If these settings already exist, psql will report an error, but ok to disregard.
+INSERT 0 1
+Node installation is complete.
+Script done, file is installation.log
+\end{verbatim}
+
+\section{Post Installation
+Configuration}\label{post-installation-configuration}
