@@ -6,10 +6,10 @@ devel=0
 
 if [ ! -s /usr/local/bin/esg-purge.sh ]; then
     echo "No esg-purge.sh file found; possibly nothing to purge.";
-    exit 0;
+    else 
+    source /usr/local/bin/esg-purge.sh && esg-purge all && rm -f /etc/yum.repos.d/esgf.repo;
 fi
 
-source /usr/local/bin/esg-purge.sh && esg-purge all && rm -f /etc/yum.repos.d/esgf.repo;
 
 while [ 1 ]; do
     read -p "Major version: $majver, subversion $subver, devel=$devel. If you want to change, press n, any other key to continue " choice;
@@ -32,4 +32,4 @@ if [ ! -s esg-autoinstall.conf ]; then
 fi
 cp esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf
 echo "You are all set. If you have the right values setup in esg-autoinstall.conf, you can execute the following:"
-echo "script -c '/usr/local/bin/esg-autoinstall' installation.log
+echo "script -c '/usr/local/bin/esg-autoinstall' installation.log"
