@@ -19,7 +19,7 @@
     <policy resource=".*dodsC.*" attribute_type="CORDEX_Commercial" attribute_value="user" action="Read"/>
     <policy resource=".*cordex.*aggregation.*" attribute_type="CORDEX_Research" attribute_value="user" action="Read"/>
     <policy resource=".*cordex.*aggregation.*" attribute_type="CORDEX_Commercial" attribute_value="user" action="Read"/>
-    <policy resource=".*cordex.*" attribute_type="wheel" attribute_value="super" action="Write"/>
+    <policy resource=".*cordex.*" attribute_type="ext_pub" attribute_value="user" action="Write"/>
     <policy resource=".*clipc.*" attribute_type="ANY" attribute_value="" action="Read"/>
     
 

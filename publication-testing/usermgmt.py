@@ -5,6 +5,20 @@ import psycopg2
 import sys
 import readline
 
+
+aparser=argparse.ArgumentParser()
+aparser.add_argument('--enable-extpub', type=str, default=None, help='requires the hostname of the idp')
+aparser.add_argument('--disable-extpub', type=str, default=None, help='requires the hostname of the idp')
+aparser.add_argument('--enable-localgroups', type=str, default=None, nargs='?', help='enables local publication groups')
+args=aparser.parse_args()
+enablepub=args.enable_extpub
+disablepub=args.disable_extpub
+enablelocalpub=args.enable_localgroups
+
+if len(sys.argv) == 1:
+    aparser.print_help()
+    sys.exit(0)
+
 with open('/esg/config/.esg_pg_pass') as passfile:
     passwd=passfile.readline().split('\n')[0]
 try:
@@ -12,13 +26,6 @@ try:
 except:
     print "Unable to connect"
     exit(-1)
-hostname=socket.gethostname()
-aparser=argparse.ArgumentParser()
-aparser.add_argument('--enable-extpub', type=str, default=None, help='requires the hostname of the idp')
-aparser.add_argument('--disable-extpub', type=str, default=None, help='requires the hostname of the idp')
-args=aparser.parse_args()
-enablepub=args.enable_extpub
-disablepub=args.disable_extpub
 
 cur=conn.cursor()
 
@@ -50,8 +57,20 @@ if enablepub != None:
     except:
         print 'No changes needed'
         sys.exit(0)
-if len(sys.argv) == 1:
-    aparser.print_help()
+    sys.exit(0)
+
+if enablelocalpub != None:
+    creategroups={'CORDEX_Research':'local CORDEX Research Group','CORDEX_Commercial':'local CORDEX Commercial group','CMIP5 Research':'local CMIP5 Research group','CMIP5 Commercial':'local CMIP5 Commercial group'}
+    for key,val in creategroups.iteritems():
+        opstr="insert into esgf_security.group(name,description,visible,automatic_approval) values ('%s','%s', True, True)"%(key,val)
+        try:
+            cur.execute(opstr)
+            conn.commit()
+            print 'Successfully added local group for %s data publication'%(key)
+        except:
+            print 'Local group for %s data publication already present'%(key)
+            conn.rollback()
+    print 'Successfully created all local publication groups'
     sys.exit(0)
 
 if disablepub != None:
