@@ -39,7 +39,7 @@ if enablepub != None:
             break
     qperm="insert into esgf_security.permission (user_id,group_id,role_id,approved) values ( (select u.id from esgf_security.user u where u.openid='https://%s/esgf-idp/openid/testpub'), (select g.id from esgf_security.group g where g.name='ext_pub'), (select r.id from esgf_security.role r where r.name='user'), True )"%(enablepub)
     qaddgp="insert into esgf_security.group(name,description,visible,automatic_approval) values ('ext_pub','external publishers group', False, False)"
-    qadduser="insert into esgf_security.user(firstname,lastname,email,username,password,openid,organization,city,country) values('Publisher','Tester','pt@example.org','testpub','$1$GnNDs7Ed$M5hLjBHVOTJGZv4TcNCFU0','https://%s/esgf-idp/openid/testpub','ABC','Linkoping','SWEDEN')"%enablepub
+    qadduser="insert into esgf_security.user(firstname,lastname,email,username,password,openid,organization,city,country,status_code) values('Publisher','Tester','pt@example.org','testpub','$1$GnNDs7Ed$M5hLjBHVOTJGZv4TcNCFU0','https://%s/esgf-idp/openid/testpub','ABC','Linkoping','SWEDEN','1')"%enablepub
 
     try:
         cur.execute(qaddgp)
