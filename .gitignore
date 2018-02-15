@@ -6,3 +6,4 @@ docsource/checklist.run.xml
 docsource/checklist.toc
 docsource/checklist.out
 scripts/fetchbootstrap.sh
+esgf-ca-bundle.crt

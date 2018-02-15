@@ -1,12 +1,31 @@
 #!/bin/bash
-cd /root/scripts
 
 doLookup(){
 	cabundle="$1";
+	trm=0;
+	silent=0;
+	if [ ! -e $cabundle ]; then
+		echo "Ca Bundle not found. Provide full path, if not in pwd";
+		exit -1; 
+	fi
+	if [ "$2" != "none" ]; then
+		if [ "$2" = "trim" ]; then
+			trm=1;
+			echo -n >posttrim;
+		else
+			silent=1;
+			wanted=$2;
+		fi
+	else 
+		silent=0;
+	fi
 	sl=0	
 	lead='-----BEGIN CERTIFICATE-----'
 	end='-----END CERTIFICATE-----'
-	cat $cabundle|tr -d "\r"|while read line; do
+	numl=`cat $cabundle|tr -d "\r"|wc -l`;
+	for i in `seq 1 $numl`; do
+		line=`head -$i $cabundle|tail -1`;
+	#cat $cabundle|tr -d "\r"|while read line; do
 		#if [ "$line" = "$lead" ]; then
 		if echo "$line"|grep -e "$lead" >/dev/null; then
 			sl=1;
@@ -18,26 +37,39 @@ doLookup(){
 			if echo "$line"|grep -e "$end" >/dev/null; then
 				sl=0;
 				lastcert=${lastcert}$end"\n"; 
-				res=`echo -e "$lastcert"|openssl x509 -noout -issuer_hash -subject`;
-				echo -e "$res"|while read ln; do
-				res=`echo $ln|cut -d "=" -f2-`;
-				echo -n "$res:";
-				done
-				echo "";
-				#ihash=`openssl x509 -in lc.pem -noout -issuer_hash`;
-				#enddate=`openssl x509 -in fc.pem -noout -enddate|cut -d '=' -f2-|tr -s ' '`;
-				#subject=`openssl x509 -in fc.pem -noout -subject|cut -d ' ' -f2-`;
-				#expdate=`echo $enddate |awk '{print $1" "$2" "$4}'`;
-				#daysremaining=`python /root/scripts/daysto.py "$expdate"`;
-				#continue; 
+				issuerhash=`echo -e "$lastcert"|openssl x509 -noout -issuer_hash`;
+				hash=`echo -e "$lastcert"|openssl x509 -noout -hash`;
+				
+				if [ $silent -eq 1 ]; then
+					if [ "$wanted" != "$hash" ]; then
+						continue;
+					fi
+					subject=`echo -e "$lastcert"|openssl x509 -noout -subject|cut -d ' ' -f2-`;
+					echo "$hash:$issuerhash $subject";
+					echo -e $lastcert;
+					break;
+				fi
+						
+				subject=`echo -e "$lastcert"|openssl x509 -noout -subject|cut -d ' ' -f2-`;
+				echo "$hash:$issuerhash $subject";
+				if [ $trm -eq 1 ]; then
+					echo "If you wish to discard, press d, any other key to retain this certificate";
+					read resp;
+					if [ "$resp" != "d" ]; then
+						echo -e "$lastcert"|awk 'NF' >>posttrim;
+					fi
+				fi
 			fi;
 			lastcert=${lastcert}$line"\n"; 
 		fi; 
 	done
 }
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ]; then
 	echo "Need ca bundle. Bailing out";
 	exit -1;
 fi
-
-doLookup "$1";
+if [ $# -eq 1 ]; then
+	doLookup "$1" "none";
+ elif [ $# -eq 2 ]; then
+	doLookup "$1" "$2";
+fi
