@@ -1,7 +1,7 @@
 #!/bin/bash
 
 majver=2.6
-subver=4
+subver=5
 devel=0
 
 if [ ! -s /usr/local/bin/esg-purge.sh ]; then
