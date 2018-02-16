@@ -66,17 +66,21 @@ if enablelocalpub != 'none':
     creategroups['CORDEX_Commercial']='local CORDEX Commercial'
     creategroups['CMIP5 Research']='local CMIP5 Research Group'
     creategroups['CMIP5 Commercial']='local CMIP5 Commercial Group'
-    
+    ct=0
     for key,val in creategroups.iteritems():
         opstr="insert into esgf_security.group(name,description,visible,automatic_approval) values ('%s','%s', True, True)"%(key,val)
         try:
             cur.execute(opstr)
             conn.commit()
             print 'Successfully added local group for %s data publication'%(key)
+            ct+=1
         except:
             print 'Local group for %s data publication already present'%(key)
             conn.rollback()
-    print 'All local groups now present'
+    if ct != 0:
+        print 'All local groups now present'
+    else:
+        print 'All local groups already present. No changes made.'
     sys.exit(0)
 
 if disablepub != None:

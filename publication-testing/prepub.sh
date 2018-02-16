@@ -1,4 +1,11 @@
 #!/bin/bash
+
+if [ "$HOSTNAME" = "esg-idx.demonet.local" ]; then
+    yum install -y python-argparse python-psycopg2
+    python usermgmt.py --enable-extpub esg-idx.demonet.local <yes
+    python usermgmt.py --enable-localgroups
+fi
+
 #Export ESGINI and backup ESGINI and other xml files, prior to making changes
 	mkdir -p backups 2>/dev/null;
 	dtstr=`date +%Y-%m-%d_%H-%M-%S`;
