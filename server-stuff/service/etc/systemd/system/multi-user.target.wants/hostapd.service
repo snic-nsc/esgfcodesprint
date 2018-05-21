@@ -1,0 +1,14 @@
+[Unit]
+Description=My Hostapd server 
+Wants=network.target
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/hostapd.pid
+ExecStartPre=/usr/bin/ifconfig enp0s20u1 192.168.3.1
+ExecStart=/usr/local/bin/hostapd -B -P /run/hostapd.pid /etc/hostapd/hostapd.conf
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
