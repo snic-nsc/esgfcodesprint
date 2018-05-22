@@ -1,7 +1,8 @@
 #!/bin/sh
-EXTIF="eno1"
+EXTIF="wlp2s0"
+#EXTIF="enp1s0"
 INTIF="enp0s20u1"
-INTIF2="wlp0s20u2"
+INTIF2="wlp0s20f0u1"
 VBOXNET='vboxnet0'
 extip=`ip addr show $EXTIF|grep -w inet|awk '{print $2}'|cut -d '/' -f1`;
 /sbin/depmod -a

@@ -6,8 +6,8 @@ After=network.target
 [Service]
 Type=forking
 PIDFile=/run/hostapd.pid
-ExecStartPre=/usr/bin/ifconfig enp0s20u1 192.168.3.1
-ExecStart=/usr/local/bin/hostapd -B -P /run/hostapd.pid /etc/hostapd/hostapd.conf
+ExecStartPre=/usr/bin/ip addr add 192.168.3.1/24 dev wlp0s20f0u1
+ExecStart=/usr/bin/hostapd -B -P /run/hostapd.pid /etc/hostapd/hostapd.conf
 KillSignal=SIGINT
 
 [Install]
