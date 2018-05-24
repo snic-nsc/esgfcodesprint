@@ -1,6 +1,5 @@
 #!/bin/bash
-#Check to make sure java version is correct
-JAVA='/usr/local/jdk1.8.0_162/bin/java'
+JAVA='/usr/local/java/bin/java'
 nodelist='esg-data.demonet.local'
 pushd /usr/local/tomcat/webapps/esg-search/WEB-INF/classes || exit -1;
 
