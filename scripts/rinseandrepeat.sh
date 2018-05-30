@@ -32,4 +32,7 @@ if [ ! -s esg-autoinstall.conf ]; then
 fi
 cp esg-autoinstall.conf /usr/local/etc/esg-autoinstall.conf
 echo "You are all set. If you have the right values setup in esg-autoinstall.conf, you can execute the following:"
-echo "script -c '/usr/local/bin/esg-autoinstall' installation.log"
+dts=`date +"%Y%m%d%H%M"`
+relname=`esg-node --version|grep Version|cut -d ' ' -f2`
+outname="installation.log-$relname-$dts"
+echo "script -c '/usr/local/bin/esg-autoinstall' $outname"
