@@ -34,4 +34,5 @@ fi
 
 #Update publisher database with new entries
 source /usr/local/conda/bin/activate esgf-pub
+export UVCDAT_ANONYMOUS_LOG=false
 esginitialize -c 2>&1|tee esginit.out
