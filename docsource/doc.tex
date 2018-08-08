@@ -213,7 +213,7 @@ Prior to setting up ESGF, you need to know the version of ESGF you should instal
 \url{https://github.com/ESGF/esgf-installer/wiki/ESGF-Installation-Using-Autoinstaller}\\
 
 Use the appropriate links from the links mentioned above, and fetch the bootstrap files for the installation.\\
-\texttt{wget -O esg-bootstrap --no-check-certificate} \url{http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/devel/2.6.4/esgf-installer/esg-bootstrap}\\
+\texttt{wget -O esg-bootstrap --no-check-certificate} \url{http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/2.6/8c/esgf-installer/esg-bootstrap}\\
 \texttt{chmod 555 esg-bootstrap}\\
 \texttt{./esg-bootstrap}
 
@@ -232,48 +232,49 @@ The execution of the boostrap script sets up key scripts that are
 \section{Answers for esg-autoinstall}
 \subsection{esg-autoinstall answers for [data index idp compute] installation}
 
-These are the answers you'd need in your esg-autoinstall.conf file, for an all-role installation (the type you perform on the vm \textbf{esg-idx.demonet.local} while testing.
-Change the answers as appropriate.
+These are the answers you'd need in your esg-autoinstall.conf file, for an all-role installation (the type you perform on the vm \textbf{esg-idx.demonet.local} while testing. Copy the \texttt{/usr/local/etc/esg-autoinstall.conf} file, modify it and copy it back. Change the answers as appropriate.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  FQDN: ``esg-idx.demonet.local''
+  set FQDN: ``esg-idx.demonet.local''
 \item
-  SHORTNAME ``short'' \# you could use any other value you please.
+  set SHORTNAME ``short'' \# you could use any other value you please.
 \item
-  LONGNAME ``long'' \# you could use any other value you please.
+  set LONGNAME ``long'' \# you could use any other value you please.
 \item
-  ADMINPASS `testpass1234' \# please use something else!
+  set ADMINPASS `testpass1234' \# please use something else!
 \item
-  ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
+  set ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
 \item
-  DBLOWPASS `pubtest1234' \# passwd for publisher database account
+  set DBLOWPASS `pubtest1234' \# passwd for publisher database account
   (alphanumeric only)
 \item
-  GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
+  set GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
   beginning of this document.
 \item
-  GLOBUSPASS `your globus passwd'
+  set GLOBUSPASS `your globus passwd'
 \item
-  ORGNAME `orgname' \# for your production node, you can use a more
+  set ORGNAME `orgname' \# for your production node, you can use a more
   meaninful value.
 \item
-  NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
+  set NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
 \item
-  DEFAULTPEER `esg-idx.demonet.local'
+  set PUBLISHNODE `esg-idx.demonet.local'
 \item
-  PUBLISHNODE `esg-idx.demonet.local'
+  set EXTERNALIDP `n'
 \item
-  EXTERNALIDP `n'
+  set IDPPEER `esg-idx.demonet.local'
 \item
-  IDPPEER `esg-idx.demonet.local'
+  set ADMINEMAIL ``your email address''
 \item
-  ADMINEMAIL ``your email address''
+  set GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
 \item
-  GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
-\item
-  THREDDS ``Y''
+  set THREDDS ``Y''
+\item 
+  set SOLRREINDEX "Y"
+\item 
+  set LOCMIRRORURL ""
 \end{enumerate}
 
 \subsection{esg-autoinstall answers for [data] installation}
@@ -284,42 +285,44 @@ Change the answers as appropriate.
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  FQDN: ``esg-data.demonet.local''
+  set FQDN: ``esg-data.demonet.local''
 \item
-  SHORTNAME ``short'' \# you could use any other value you please.
+  set SHORTNAME ``short'' \# you could use any other value you please.
 \item
-  LONGNAME ``long'' \# you could use any other value you please.
+  set LONGNAME ``long'' \# you could use any other value you please.
 \item
-  ADMINPASS `testpass1234' \# please use something else!
+  set ADMINPASS `testpass1234' \# please use something else!
 \item
-  ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
+  set ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
 \item
-  DBLOWPASS `pubtest1234' \# passwd for publisher database account
+  set DBLOWPASS `pubtest1234' \# passwd for publisher database account
   (alphanumeric only)
 \item
-  GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
+  set GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
   beginning of this document.
 \item
-  GLOBUSPASS `your globus passwd'
+  set GLOBUSPASS `your globus passwd'
 \item
-  ORGNAME `orgname' \# for your production node, you can use a more
+  set ORGNAME `orgname' \# for your production node, you can use a more
   meaninful value.
 \item
-  NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
+  set NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
 \item
-  DEFAULTPEER `esg-idx.demonet.local'
+  set PUBLISHNODE `esg-idx.demonet.local'
 \item
-  PUBLISHNODE `esg-idx.demonet.local'
+  set EXTERNALIDP `y'
 \item
-  EXTERNALIDP `y'
+  set IDPPEER `esg-idx.demonet.local'
 \item
-  IDPPEER `esg-idx.demonet.local'
+  set ADMINEMAIL ``your email address''
 \item
-  ADMINEMAIL ``your email address''
+  set GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
 \item
-  GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
-\item
-  THREDDS ``Y''
+  set THREDDS ``Y''
+\item 
+  set SOLRREINDEX "Y"
+\item 
+  set LOCMIRRORURL ""
 \end{enumerate}
 
 \subsection{esg-autoinstall answers for [data index compute] installation}
@@ -330,42 +333,44 @@ Change the answers as appropriate.
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  FQDN: ``esg-idx2.demonet.local''
+  set FQDN: ``esg-idx2.demonet.local''
 \item
-  SHORTNAME ``short'' \# you could use any other value you please.
+  set SHORTNAME ``short'' \# you could use any other value you please.
 \item
-  LONGNAME ``long'' \# you could use any other value you please.
+  set LONGNAME ``long'' \# you could use any other value you please.
 \item
-  ADMINPASS `testpass1234' \# please use something else!
+  set ADMINPASS `testpass1234' \# please use something else!
 \item
-  ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
+  set ADMINIP `192.168.56.1'\# don't change when testing with the virtual testbed. In the real world, you'd need to specify the ip address of the machine used to access certain IP-restricted admin pages
 \item
-  DBLOWPASS `pubtest1234' \# passwd for publisher database account
+  set DBLOWPASS `pubtest1234' \# passwd for publisher database account
   (alphanumeric only)
 \item
-  GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
+  set GLOBUSUSER `yourglobus id' \#the one you signed up for, at the
   beginning of this document.
 \item
-  GLOBUSPASS `your globus passwd'
+  set GLOBUSPASS `your globus passwd'
 \item
-  ORGNAME `orgname' \# for your production node, you can use a more
+  set ORGNAME `orgname' \# for your production node, you can use a more
   meaninful value.
 \item
-  NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
+  set NAMESPACE `local.demonet' \# don't change during the workshop/or while testing with the virtual testbed.
 \item
-  DEFAULTPEER `esg-idx2.demonet.local'
+  set PUBLISHNODE `esg-idx2.demonet.local'
 \item
-  PUBLISHNODE `esg-idx2.demonet.local'
+  set EXTERNALIDP `y'
 \item
-  EXTERNALIDP `y'
+  set IDPPEER `esg-idx.demonet.local'
 \item
-  IDPPEER `esg-idx.demonet.local'
+  set ADMINEMAIL ``your email address''
 \item
-  ADMINEMAIL ``your email address''
+  set GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
 \item
-  GLOBUS ``Y'' \# set t Y for fresh install, and N for upgrade
-\item
-  THREDDS ``Y''
+  set THREDDS ``Y''
+\item 
+  set SOLRREINDEX "Y"
+\item 
+  set LOCMIRRORURL ""
 \end{enumerate}
 
 \section{Script for easy wiping/reinstalling installations during testing}
@@ -407,7 +412,7 @@ When promped for the chainfile, specify: /etc/tempcerts/cacert.pem
         with the body: subscribe esgf-node-admins
         -------------------------------------------------------
 
-v2.5.17-master-release
+v2.6.8c-master-release
 
 Writing additional settings to db. If these settings already exist, psql will report an error, but ok to disregard.
 INSERT 0 1

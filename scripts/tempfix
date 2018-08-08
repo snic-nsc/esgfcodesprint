@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source /usr/local/conda/bin/activate esgf-pub
+conda install -c conda-forge libiconv
+conda remove cdms2 cdtime cmor cdutil
+conda install -c pcmdi/label/nightly -c conda-forge cmor cdms2 cdtime
