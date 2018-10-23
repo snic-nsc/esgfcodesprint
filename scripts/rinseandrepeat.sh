@@ -1,8 +1,8 @@
 #!/bin/bash
 
-majver=2.6
-subver=8b
-devel=0
+majver=2.8
+subver=0
+devel=1
 
 if [ ! -s /usr/local/bin/esg-purge.sh ]; then
     echo "No esg-purge.sh file found; possibly nothing to purge.";
