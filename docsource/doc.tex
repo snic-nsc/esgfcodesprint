@@ -1,8 +1,8 @@
 %\chapter{Checklist to setup virtual test cluster for ESGF testing}
 \section {About this document}
-This document was created during the ESGF codesprint conducted by NSC/Link\"oping University, with support from IS-ENES2, and has been revised for use during subsequent workshops. 
+This document was created during the ESGF codesprint conducted by NSC/Link\"oping University, with support from IS-ENES2, and continues to be revised thanks to support from the NICEST project of the Nordic E-Infrastructure Consortium (NEIC). 
 This document and accompanying scripts and sample configuration files etc can be cloned from the following github repo:\\
-\url{https://github.com/snic-nsc/esgfcodesprint2015.git}.
+\url{https://github.com/snic-nsc/esgfcodesprint.git}.
 \par\vspace{2mm}\noindent
 Preinstalled virtual machines are made available for testing use and are provided without any guarantee/warranty or liability whatsoever and are \textbf{NOT} meant to be used for production deployment.  The virtual machines have been setup in a manner that would allow for easy deployment on a laptop/workstation, on a private local network. If the host machine (laptop/workstation) is connected to the internet, these vms would be able to access the internet, but would themselves not be reachable from the internet. This is to allow for testing ESGF deployments, without the need to have the resource on open internet.
 \section{Prerequisites}
@@ -213,7 +213,7 @@ Prior to setting up ESGF, you need to know the version of ESGF you should instal
 \url{https://github.com/ESGF/esgf-installer/wiki/ESGF-Installation-Using-Autoinstaller}\\
 
 Use the appropriate links from the links mentioned above, and fetch the bootstrap files for the installation.\\
-\texttt{wget -O esg-bootstrap --no-check-certificate} \url{http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/2.6/8c/esgf-installer/esg-bootstrap}\\
+\texttt{wget -O esg-bootstrap --no-check-certificate} \url{http://distrib-coffee.ipsl.jussieu.fr/pub/esgf/dist/devel/\scriptmajversion/\scriptsubversion/esgf-installer/esg-bootstrap}\\
 \texttt{chmod 555 esg-bootstrap}\\
 \texttt{./esg-bootstrap}
 
@@ -411,8 +411,6 @@ When promped for the chainfile, specify: /etc/tempcerts/cacert.pem
         esgf-node-admins@lists.llnl.gov by sending email to: majordomo@lists.llnl.gov
         with the body: subscribe esgf-node-admins
         -------------------------------------------------------
-
-v2.6.8c-master-release
 
 Writing additional settings to db. If these settings already exist, psql will report an error, but ok to disregard.
 INSERT 0 1
