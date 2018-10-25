@@ -3,14 +3,31 @@
 devel=develval
 release_maj_version=rmversion
 release_sub_version=rsversion
+mirror="mirrorval"
+mirror=${mirror:-"liu"}
+
+declare -A mirrors
+
+mirrors['liu']='esg-dn2.nsc.liu.se/esgf'
+mirrors['aims']='aims1.llnl.gov/esgf'
+mirrors['ceda']='dist.ceda.ac.uk/esgf'
+mirrors['ipsl']='distrib-coffee.ipsl.jussieu.fr/pub/esgf'
+
+if [ "$mirror" = "ipsl" ]; then
+    bootstrap_file='esg-bootstrap';
+else
+    bootstrap_file="esg-bootstrap.${mirror}"
+fi
+mirrorurl=${mirrors["$mirror"]}    
+
 
 if [ $devel -eq 1 ]; then
-	wget -O esg-bootstrap.liu http://esg-dn2.nsc.liu.se/esgf/dist/devel/$release_maj_version/$release_sub_version/esgf-installer/esg-bootstrap.liu --no-check-certificate
-	chmod 555 esg-bootstrap.liu
-	./esg-bootstrap.liu --devel
+	wget -O $bootstrap_file http://${mirrorurl}/dist/devel/$release_maj_version/$release_sub_version/esgf-installer/$bootstrap_file --no-check-certificate
+	chmod 555 $bootstrap_file
+	./$bootstrap_file --devel
 else
-	wget -O esg-bootstrap.liu http://esg-dn2.nsc.liu.se/esgf/dist/$release_maj_version/$release_sub_version/esgf-installer/esg-bootstrap.liu --no-check-certificate
-	chmod 555 esg-bootstrap.liu
-	./esg-bootstrap.liu
+	wget -O $bootstrap_file http://esg-dn2.nsc.liu.se/esgf/dist/$release_maj_version/$release_sub_version/esgf-installer/$bootstrap_file --no-check-certificate
+	chmod 555 $bootstrap_file
+	./$bootstrap_file
 
 fi

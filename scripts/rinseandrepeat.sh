@@ -3,6 +3,7 @@
 majver=2.8
 subver=0
 devel=1
+mirror="liu"
 
 if [ ! -s /usr/local/bin/esg-purge.sh ]; then
     echo "No esg-purge.sh file found; possibly nothing to purge.";
@@ -12,18 +13,19 @@ fi
 
 
 while [ 1 ]; do
-    read -p "Major version: $majver, subversion $subver, devel=$devel. If you want to change, press n, any other key to continue " choice;
+    read -p "Major version: $majver, subversion $subver, devel=$devel, mirror=$mirror. If you want to change, press n, any other key to continue " choice;
     if [ "$choice" != 'n' ]; then
         break;
     fi
     read -p "Enter major version " majver
     read -p "Enter subversion " subver
     read -p "Enter devel " devel
+    read -p "Enter mirror (liu/aims/ceda/ipsl) " mirror
 done
-
 sed "s/develval/$devel/" fetchbootstrap.tmpl >fetchbootstrap.sh
 sed -i "s/rmversion/$majver/" fetchbootstrap.sh
 sed -i "s/rsversion/$subver/" fetchbootstrap.sh
+sed -i "s/mirrorval/$mirror/" fetchbootstrap.sh
 bash fetchbootstrap.sh
 
 if [ ! -s esg-autoinstall.conf ]; then
