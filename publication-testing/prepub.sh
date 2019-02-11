@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$HOSTNAME" = "esg-idx.demonet.local" -o "$HOSTNAME" = "esg-autoidx.demonet.local" ]; then
+if [ "$HOSTNAME" = "esg-idx.demonet.local" -o "$HOSTNAME" = "esg-autoidx.demonet.local" -o "$HOSTNAME" = "esg7-idx.demonet.local" ]; then
     yum install -y python-argparse python-psycopg2
     python usermgmt.py --enable-extpub $HOSTNAME <yes
     python usermgmt.py --enable-localgroups
