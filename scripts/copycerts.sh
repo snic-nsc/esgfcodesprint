@@ -1,6 +1,9 @@
 #!/bin/bash
 trustpass=`mkpasswd -s 0`;
 hostn=`hostname -a`
+if ! [ -e /root/esgfcodesprint2015 ]; then
+    ln -s /root/esgfcodesprint /root/esgfcodesprint2015
+fi
 pushd /root/esgfcodesprint2015/confs && git pull || exit -1;
 popd
 pushd /etc/esgfcerts
