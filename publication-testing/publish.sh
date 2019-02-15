@@ -3,7 +3,7 @@ rm -rf /root/.globus/certificates
 ln -s /etc/grid-security/certificates /root/.globus/certificates
 export ESGINI=/esg/config/esgcet/esg.ini
 export UVCDAT_ANONYMOUS_LOG=false
-if [ "$HOSTNAME" = "esg-idx.demonet.local" -o "$HOSTNAME" = "esg-autoidx.demonet.local" -o "$HOSTNAME" = "esg7-idx.demonet.local"]; then
+if [ "$HOSTNAME" = "esg-idx.demonet.local" -o "$HOSTNAME" = "esg-autoidx.demonet.local" -o "$HOSTNAME" = "esg7-idx.demonet.local" ]; then
     myproxy-logon -s $HOSTNAME -l testpub -o /root/.globus/certificate-file
 else
     myproxy-logon -s esg-idx.demonet.local -l testpub -o /root/.globus/certificate-file
