@@ -52,6 +52,7 @@ loopback mappings (ipv4)
         127.0.0.1=2
 \end{verbatimtab}
 \item You now need to download the exported vm `ova' files, which can be imported into VirtualBox. If you can deploy only one vm due to harddisk space constraints, it should be `esg-idx.demonet.local.ova' you need. You can download the others if you have adequate disk space. A complete installation of ESGF on a freshly imported vm is approximately 9 GiB in size.
+\item The images, esg7-idx.demonet.local.ova and esg7-data.demonet.local.ova are Centos 7 virtual machines, whereas the rest are installed with Centos 6.
 \item If you are a currently participating in the NICEST ESGF workshop in NSC, Sweden, the download url is \url{ftp://192.168.2.1/virtualtestbed}. \\ \greenline{If you are viewing this document outside the workshop, the url is} \\ \url{http://esg-dn2.nsc.liu.se/virtualtestbed}
 \newpage
 \item Import the virtual machine(s) in this manner
@@ -101,6 +102,8 @@ Successfully imported the appliance.
 192.168.56.52   esg-idx.demonet.local   esg-idx
 192.168.56.53   esg-idx2.demonet.local  esg-idx2
 192.168.56.54   esg-data.demonet.local   esg-data
+192.168.56.60   esg7-idx.demonet.local  esg7-idx
+192.168.56.61   esg7-data.demonet.local esg7-data
 \end{verbatimtab}
 \item Update packages on the vms to the latest available versions, by doing the following.
 \begin{enumerate}
